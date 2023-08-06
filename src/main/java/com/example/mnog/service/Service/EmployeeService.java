@@ -1,51 +1,58 @@
-package com.example.mnog.service;
+package com.example.mnog.service.Service;
 
+import com.example.mnog.service.Employee;
 import com.example.mnog.service.exeption.EmployeeAlreadyAddedException;
 import com.example.mnog.service.exeption.EmployeeNotFoundException;
 import com.example.mnog.service.exeption.EmployeeStorageIsFullException;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-
 @Service
 public class EmployeeService {
 
     private static final int LIMIT = 10;
-    private final List<Employee> employees = new ArrayList<>();
-
+    private final Map<String, Employee> employees = new HashMap<>();
 
     public void addEmployee(String firstName, String lastName, int departament) {
         if (employees.size() == LIMIT) {
             throw new EmployeeStorageIsFullException();
         }
-        var employee = new Employee(firstName, lastName, departament);
-        if (employees.contains(employee)) {
+        var key = empKey(firstName, lastName);
+        if (employees.containsKey(key)) {
             throw new EmployeeAlreadyAddedException();
         }
-        employees.add(employee);
+
+        employees.put(key, new Employee(firstName, lastName, departament));
+
     }
 
     public Employee findEmployee(String firstName, String lastName, int departament) {
-        var employee = new Employee(firstName, lastName, departament);
-        for (Employee emp : employees) {
-            if (emp.equals(employee)) {
-                return emp;
-            }
+        var emp = employees.get(empKey(firstName, lastName));
+        if (emp == null) {
+            throw new EmployeeNotFoundException();
         }
-        throw new EmployeeNotFoundException();
+        return emp;
     }
 
     public boolean removeEmployee(String firstName, String lastName, int departament) {
-        var employee = new Employee(firstName, lastName, departament);
-        if (employees.remove(employee)) {
-            return true;
+        Employee rem = employees.remove(empKey(firstName, lastName));
+        if (rem == null) {
+            throw new EmployeeNotFoundException();
         }
-        throw new EmployeeNotFoundException();
+        return true;
     }
 
-    public Collection<Employee> getAll() {
-        return Collections.unmodifiableList(employees);
+    public Map<Integer, List<Employee>> getAll() {
+
+
+        return employees.values();
     }
+
+    private String empKey(String firstName, String lastName) {
+        return (firstName + "_" + lastName).toLowerCase();
+    }
+
+
 }
 
 //@Service

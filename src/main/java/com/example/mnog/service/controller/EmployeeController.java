@@ -2,14 +2,13 @@ package com.example.mnog.service.controller;
 
 
 import com.example.mnog.service.Employee;
-import com.example.mnog.service.EmployeeService;
+import com.example.mnog.service.Service.EmployeeService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
-import java.util.List;
 
 @RestController
 @RequestMapping("/employee")
