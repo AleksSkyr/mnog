@@ -4,6 +4,7 @@ import com.example.mnog.service.Employee;
 import com.example.mnog.service.exeption.EmployeeAlreadyAddedException;
 import com.example.mnog.service.exeption.EmployeeNotFoundException;
 import com.example.mnog.service.exeption.EmployeeStorageIsFullException;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -22,7 +23,7 @@ public class EmployeeService {
             throw new EmployeeAlreadyAddedException();
         }
 
-        employees.put(key, new Employee(firstName, lastName, departament));
+        employees.put(key, new Employee(StringUtils.capitalize(firstName), StringUtils.capitalize(lastName), departament));
 
     }
 
@@ -45,7 +46,7 @@ public class EmployeeService {
     public Map<Integer, List<Employee>> getAll() {
 
 
-        return employees.values();
+        return (Map<Integer, List<Employee>>) employees.values();
     }
 
     private String empKey(String firstName, String lastName) {
